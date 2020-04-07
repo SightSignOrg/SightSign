@@ -101,17 +101,6 @@ steps:
       }
 
       Write-Host "New Version   $newversion"
-      try
-      {
-        $gitcheck = git checkout $sbranch --quiet
-        git fetch
-      }
-      finally
-      {
-        git config --global user.email "$(git.email)"
-        git config --global user.name "$(git.name)"
-        git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
-      }
 
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
 
@@ -144,6 +133,12 @@ steps:
       # 4) push changes to package.appxmanifest with tag
       try
       {
+        git config --global user.email "$(git.email)"
+        git config --global user.name "$(git.name)"
+        git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
+
+        $gitcheck = git checkout $sbranch --quiet
+        git fetch
         git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
         git commit -q -m "Updating version to $newversion"
         git push --quiet
