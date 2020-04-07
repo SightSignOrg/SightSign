@@ -146,7 +146,7 @@ steps:
       {
         git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
         git commit -q -m "Updating version to $newversion"
-        git push origin $sbranch --quiet
+        git push -u origin $sbranch --quiet
         git tag $newversion
         git push origin --tags $sbranch --quiet
       }
