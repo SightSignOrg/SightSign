@@ -101,17 +101,24 @@ steps:
       }
 
       Write-Host "New Version   $newversion"
-
-      $gitcheck = git checkout $sbranch --quiet
-      git fetch
+      try
+      {
+        $gitcheck = git checkout $sbranch --quiet
+        git fetch
+        git config --global user.email "$(git.email)"
+        git config --global user.name "$(git.name)"
+        git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
+      }
+      catch
+      {
+        Write-Host "Attempted to run git commands but failed"
+      }
 
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
 
       Write-Host "branch $sbranch"
 
-      git config --global user.email "$(git.email)"
-      git config --global user.name "$(git.name)"
-      git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
+
       
       # 3) Replace version with updated version in package.appxmanifest
       [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
@@ -136,13 +143,20 @@ steps:
       Write-Host "Package Manifest $con"
 
       # 4) push changes to package.appxmanifest with tag
-      git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
-      git commit -q -m "Updating version to $newversion"
-      git push origin $sbranch --quiet
+      try
+      {
+        git add $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/Package.appxmanifest
+        git commit -q -m "Updating version to $newversion"
+        git push origin $sbranch --quiet
+        git tag $newversion
+        git push origin --tags $sbranch --quiet
+      }
+      finally
+      {
+        Write-Host "Tried to run git commands but failed to push"
+      }
 
-      git tag $newversion
-      
-      git push origin --tags $sbranch --quiet
+
 
 - task: VSBuild@1
   inputs:
