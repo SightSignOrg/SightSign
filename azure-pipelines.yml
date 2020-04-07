@@ -105,13 +105,12 @@ steps:
       {
         $gitcheck = git checkout $sbranch --quiet
         git fetch
+      }
+      finally
+      {
         git config --global user.email "$(git.email)"
         git config --global user.name "$(git.name)"
         git config remote.origin.url https://$(git.username):$(git.password)@github.com/SightSignOrg/SightSign.git
-      }
-      catch
-      {
-        Write-Host "Attempted to run git commands but failed"
       }
 
       $sbranch = Split-Path $(Build.SourceBranch) -leaf
