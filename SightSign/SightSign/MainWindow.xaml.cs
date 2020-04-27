@@ -66,7 +66,7 @@ namespace SightSign
 
             this.SetDrawingZoneRectangle(0);  // set the init drawing zone rectangle
             this.areaText.Visibility = Visibility.Collapsed;  // init as collapsed
-            this.Create_SaveFile_Directory(); // init the save file directory in the AppX folder
+            //this.Create_SaveFile_Directory(); // init the save file directory in the AppX folder
         }
 
         private void SetDrawingAttributesFromSettings(DrawingAttributes attributes)
@@ -76,8 +76,8 @@ namespace SightSign
             attributes.Height = _settings.InkWidth;
 
             attributes.StylusTip = StylusTip.Ellipse;
-            SigBank.Background= new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
-            SigBank.Margin = new Thickness(0,0, 100, 0);
+            SigBank.Background = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
+            SigBank.Margin = new Thickness(0, 0, 100, 0);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -106,8 +106,9 @@ namespace SightSign
             if (string.IsNullOrEmpty(filename))
             {
                 // Look for default ink if we can find it in the same folder as the exe.
-                filename = AppDomain.CurrentDomain.BaseDirectory + "Signature.isf";
-                
+                string localPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                filename = localPath + "Signature.isf";
+
             }
 
             if (File.Exists(filename))
@@ -408,7 +409,7 @@ namespace SightSign
                 pt.X = (pt.X * scaleFactorX) + drawZoneRect.Left;
                 pt.Y = (pt.Y * scaleFactorY) + drawZoneRect.Top;
             }
-          
+
             // Send the point to the robot too.
             // Leave the arm in its current down state.
             RobotArm.Move(pt);
@@ -650,8 +651,8 @@ namespace SightSign
             }
         }
 
-            // Clear all ink from the app.
-            private void ClearButton_Click(object sender, RoutedEventArgs e)
+        // Clear all ink from the app.
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
@@ -664,9 +665,9 @@ namespace SightSign
             dialog.Title = "Please select a file to import.";
             if (dialog.ShowDialog() == true)
             {
-                if(System.IO.Path.GetExtension(dialog.FileName).Equals(".isf"))
+                if (System.IO.Path.GetExtension(dialog.FileName).Equals(".isf"))
                 {
-                    
+
                     AddInkFromFile(dialog.FileName);
                 }
                 else
@@ -679,7 +680,7 @@ namespace SightSign
         // Generate a file path for the saved signature.
         private string Generate_FilePath()
         {
-            string fileName =AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
+            string fileName = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\sigBank\\ink\\" + DateTime.Now.ToString("dd_MMM_yyy_HH_mm") + ".isf";
             fileName.Replace(":", "_");
             fileName.Replace(",", "_");
             return fileName;
@@ -689,9 +690,9 @@ namespace SightSign
         private void CaptureScreen(string fileDest)
         {
             //get the virtual screen dimensions w/o left and right navigation grid columns
-            double screenLeft = (1.4)*NavGrid.ActualWidth;
-            double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth/2;
-            double screenWidth = canvas.ActualWidth - (1.2)*settingsGrid.ActualWidth;
+            double screenLeft = (1.4) * NavGrid.ActualWidth;
+            double screenTop = SystemParameters.VirtualScreenTop + NavGrid.ActualWidth / 2;
+            double screenWidth = canvas.ActualWidth - (1.2) * settingsGrid.ActualWidth;
             double screenHeight = SystemParameters.VirtualScreenHeight - NavGrid.ActualWidth;
 
             using (System.Drawing.Bitmap bmap = new System.Drawing.Bitmap((int)screenWidth, (int)screenHeight))
@@ -710,8 +711,8 @@ namespace SightSign
 
         private void Create_SaveFile_Directory()
         {
-            string inkDir = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\ink";
-            string imgDir = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\img";
+            string inkDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\sigBank\\ink";
+            string imgDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\sigBank\\img";
             if (!Directory.Exists(inkDir))
             {
                 Directory.CreateDirectory(inkDir);
@@ -739,7 +740,7 @@ namespace SightSign
                 string fileName = this.Generate_FilePath();
                 this.SaveInkFile(fileName);
                 this.CaptureScreen(fileName);
-                
+
                 // This ink will be automatically loaded when the app next starts.
                 Settings1.Default.LoadedInkLocation = fileName;
                 Settings1.Default.Save();
@@ -762,11 +763,12 @@ namespace SightSign
         private void LoadButton_Click(object sender, RoutedEventArgs e)
         {
             SigBank.Children.Clear();
-            if (SigBank.Visibility == Visibility.Collapsed){
+            if (SigBank.Visibility == Visibility.Collapsed)
+            {
                 LoadButton.ButtonText = "Close";
-                
+
                 // Read all signatures from ..//sigBank
-                string sigBankImagePath = AppDomain.CurrentDomain.BaseDirectory + "\\sigBank\\img";
+                string sigBankImagePath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\sigBank\\img";
                 string[] sigImagePaths = Directory.GetFiles(sigBankImagePath);
                 string[] recentSigImagePaths = new string[4];
 
@@ -774,7 +776,7 @@ namespace SightSign
                 int count = 0;
                 while (count < sigImagePaths.Length && count < 4)
                 {
-                    recentSigImagePaths[count] = sigImagePaths[(sigImagePaths.Length-1) - count];
+                    recentSigImagePaths[count] = sigImagePaths[(sigImagePaths.Length - 1) - count];
                     count++;
                 }
 
@@ -806,12 +808,12 @@ namespace SightSign
                     btn.Name = name;
                     btn.Click += ThumbnailButton_Click;
                     btn.Content = img;
-                    btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i%2); //assign row & column and row propeties 
+                    btn.SetValue(System.Windows.Controls.Grid.ColumnProperty, i % 2); //assign row & column and row propeties 
                     btn.SetValue(System.Windows.Controls.Grid.RowProperty, row);
                     btn.MaxHeight = img.Height;
                     btn.MaxWidth = img.Width;
                     btn.Background = Brushes.Transparent;
-                    btn.BorderBrush = Brushes.Transparent;                  
+                    btn.BorderBrush = Brushes.Transparent;
 
                     SigBank.Children.Add(btn);
                 }
@@ -833,8 +835,8 @@ namespace SightSign
         {
             //convert sender to button; replace octal 
             System.Windows.Controls.Button btn_clicked = (System.Windows.Controls.Button)sender;
-            string fileName = btn_clicked.Name; 
-            fileName = fileName.Replace("3A", ":").Replace("5C", "\\").Replace("img","ink") + ".isf";
+            string fileName = btn_clicked.Name;
+            fileName = fileName.Replace("3A", ":").Replace("5C", "\\").Replace("img", "ink") + ".isf";
 
 
             AddInkFromFile(fileName);
@@ -1040,7 +1042,7 @@ namespace SightSign
             else if (btn.ButtonText == "+" && targetArea < 0)
             {
                 targetArea += 1;
- 
+
             }
 
             this.SetDrawingZoneRectangle(targetArea);
