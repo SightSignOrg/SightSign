@@ -76,8 +76,8 @@ namespace SightSign
             attributes.Height = _settings.InkWidth;
 
             attributes.StylusTip = StylusTip.Ellipse;
-            SigBank.Background = new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
-            SigBank.Margin = new Thickness(0, 0, 100, 0);
+            SigBank.Background= new SolidColorBrush(Color.FromArgb(200, 254, 212, 42));
+            SigBank.Margin = new Thickness(0,0, 100, 0);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -108,7 +108,6 @@ namespace SightSign
                 // Look for default ink if we can find it in the same folder as the exe.
                 string localPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
                 filename = localPath + "Signature.isf";
-
             }
 
             if (File.Exists(filename))
@@ -409,7 +408,6 @@ namespace SightSign
                 pt.X = (pt.X * scaleFactorX) + drawZoneRect.Left;
                 pt.Y = (pt.Y * scaleFactorY) + drawZoneRect.Top;
             }
-
             // Send the point to the robot too.
             // Leave the arm in its current down state.
             RobotArm.Move(pt);
@@ -608,12 +606,11 @@ namespace SightSign
                 StampButton.Visibility = Visibility.Visible;
                 ClearButton.Visibility = Visibility.Collapsed;
                 ImportButton.Visibility = Visibility.Collapsed;
-
+              
                 SigBank.IsEnabled = true;
                 StampButton.IsEnabled = true;
                 ClearButton.IsEnabled = false;
                 ImportButton.IsEnabled = false;
-
                 backGroundd.ImageSource = null;
                 inkCanvas.IsEnabled = false;
 
@@ -651,8 +648,8 @@ namespace SightSign
             }
         }
 
-        // Clear all ink from the app.
-        private void ClearButton_Click(object sender, RoutedEventArgs e)
+            // Clear all ink from the app.
+            private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             inkCanvas.Strokes.Clear();
             inkCanvasAnimations.Strokes.Clear();
@@ -665,9 +662,8 @@ namespace SightSign
             dialog.Title = "Please select a file to import.";
             if (dialog.ShowDialog() == true)
             {
-                if (System.IO.Path.GetExtension(dialog.FileName).Equals(".isf"))
+                if(System.IO.Path.GetExtension(dialog.FileName).Equals(".isf"))
                 {
-
                     AddInkFromFile(dialog.FileName);
                 }
                 else
@@ -740,7 +736,7 @@ namespace SightSign
                 string fileName = this.Generate_FilePath();
                 this.SaveInkFile(fileName);
                 this.CaptureScreen(fileName);
-
+                
                 // This ink will be automatically loaded when the app next starts.
                 Settings1.Default.LoadedInkLocation = fileName;
                 Settings1.Default.Save();
@@ -1042,7 +1038,6 @@ namespace SightSign
             else if (btn.ButtonText == "+" && targetArea < 0)
             {
                 targetArea += 1;
-
             }
 
             this.SetDrawingZoneRectangle(targetArea);
