@@ -65,6 +65,24 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj
+      $oldpackagetp = $packageman.Package.PropertyGroup.PackageCertificateThumbprint
+      Write-Host "Old Package Thumbprint $oldpackagetp"
+
+      $packageman.Package.PropertyGroup.PackageCertificateThumbprint = $buildtp
+      $newpackagever = $packageman.Package.PropertyGroup.PackageCertificateThumbprint
+      Write-Host "New Package Version $buildtp"
+
+
+      $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj")
+      
+      $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj
+      Write-Host "Package Manifest $con"
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: |
       Set-Location $(System.DefaultWorkingDirectory)
       # (Major).(Minor).(Patch).(Revision)
       # 1) Get Version from tags
