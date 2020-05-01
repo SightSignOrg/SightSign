@@ -69,8 +69,8 @@ steps:
       $oldpackagetp = $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint
       Write-Host "Old Package Thumbprint $oldpackagetp"
 
-      $packageman.Project.PropertyGroup.PackageCertificateThumbprint = $buildtp
-      $newpackagever = $packageman.Project.PropertyGroup.PackageCertificateThumbprint
+      $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint = $buildtp
+      $newpackagever = $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint
       Write-Host "New Package Version $buildtp"
 
 
