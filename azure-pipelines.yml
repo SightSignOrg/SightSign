@@ -167,7 +167,7 @@ steps:
       {
         Write-Host "Tried to run git commands but failed to push"
       }
-
+      New-Item $(System.DefaultWorkingDirectory)/SightSign/UITests/bin/Release/ -ItemType Directory -ea 0
 
 
 - task: VSBuild@1
