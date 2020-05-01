@@ -73,7 +73,7 @@ steps:
       $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint = "$(buildtp)""
       $newpackagever = $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint
 
-      $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj")
+      $packageman.Save("${System.DefaultWorkingDirectory}/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj")
       
       $con = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj
       Write-Host "Package Manifest $con"
