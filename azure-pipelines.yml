@@ -70,7 +70,7 @@ steps:
       Write-Host "Old Package Thumbprint $oldpackagetp"
 
       Write-Host "New Package Version $(buildtp)"
-      $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint = $(buildtp)
+      $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint = "$(buildtp)""
       $newpackagever = $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint
 
       $packageman.Save("$(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj")
