@@ -66,7 +66,7 @@ steps:
     targetType: 'inline'
     script: |
       [XML]$packageman = Get-Content $(System.DefaultWorkingDirectory)/SightSign/SightSignPackagingProject/SightSignPackagingProject.wapproj
-      $oldpackagetp = $packageman.Project.PropertyGroup.PackageCertificateThumbprint.InnerText
+      $oldpackagetp = $packageman.Project.PropertyGroup[2].PackageCertificateThumbprint
       Write-Host "Old Package Thumbprint $oldpackagetp"
 
       $packageman.Project.PropertyGroup.PackageCertificateThumbprint = $buildtp
