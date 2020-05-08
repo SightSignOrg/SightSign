@@ -51,6 +51,10 @@ The application is a WPF .NET application written in C#, with C/C++ Arduino code
 
 This application was designed to be accessible in a variety of ways. For full details, please review the [accessibility.md](docs/Accessibility.md).
 
+# Instruction Manual and Calibration Paper
+- Instruction manual: https://docs.google.com/document/d/1if8SR7nFC3gX0B5DCbig-KuxhEenNq8RyCTk-Z8_giA/edit?usp=sharing
+- Calibration paper: https://drive.google.com/file/d/1MaKuRvffwWN2OAsAYUQjR6Ldsa4npW_e/view?us
+
 # Privacy
 
 Information regarding privacy can be found in the [privacy.md](docs/privacy.md).
